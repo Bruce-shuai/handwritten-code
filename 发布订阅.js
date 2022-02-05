@@ -1,40 +1,41 @@
 class EventEmitter {
   constructor() {
-    this.cache = {};
+    // 在全局我们需要设置一个对象，来存储事件和监听函数之间的关系
+    // eventMap 用来存储事件和监听函数之间的关系
+    this.eventMap= {}
   }
 
   // 订阅
-  on(name, fn) {
-    if (this.cache[name]) {
-      this.cache[name].push(fn);
-    } else {
-      // 放置的是一个数组
-      this.cache[name] = [fn];    
+  on(type, handler) {
+    // handler必须是一个函数，如果不是直接报错
+    if (!(handler instanceof Function)) {
+      throw new Error('哥 你错了 请传一个函数')
     }
+    // 判断 type 事件对应的队列是否存在
+    if (!this.eventMap[type]) {
+      // 如果不存在，新建该队列
+      this.eventMap[type] = [];
+    }
+    // 若存在，直接往队列里推入handler
+    this.eventMap[type].push(handler)
   }
 
   // 踢掉某个订阅者
-  off(name, fn) {
-    const tasks = this.cache[name];
-    if (tasks) {
-      // f.callback  是一个什么操作哦？
-      const index = tasks.findIndex(f => f === fn || f.callback === fn); 
-      if (index >= 0) {
-        tasks.splice(index, 1);
-      }
+  off(type, handler) {
+    if(this.eventMap[type]) {
+      // >>> 效果是
+      this.eventMap[type].splice(this.eventMap[type].indexOf(handler)>>>0,1)
     }
   }
+  
 
   // 发布
-  emit(name, once = false) {
-    if (this.cache[name]) {
-      const tasks = this.cache[name].slice();   // 创建了一个副本
-      for (let fn of tasks) {
-        fn();
-      }
-      if (once) {
-        delete this.cache[name]
-      }
+  emit(type, params) {
+    // 假若该事件是有订阅的
+    if (this.eventMap[type]) {
+      this.eventMap[type].forEach((handler, index) => {
+        handler(params)
+      })
     }
   }
 }
