@@ -14,7 +14,6 @@ function query() {
 }
 
 // 方法二：split大法
-
 function getParams(url) {
   const res = {};
   if (url.includes('?')) {

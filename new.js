@@ -28,6 +28,6 @@ function create(Con, ...args) {
   // 创建一个空对象，并链接到原型
   let obj = Object.create(Con.prototype);
   // 绑定this，执行构造函数
-  let res = Con.apply(obj, args);   // 执行一次构造函数，看是否有返回值，且返回值是否是对象
+  let res = Con.apply(obj, args);   // 执行一次构造函数，看是否有返回值，且返回值是否是对象 (有待研究)
   return res instanceof Object ? res : obj;   // 有一个问题： obj是没有绑定this的呀！
 }
