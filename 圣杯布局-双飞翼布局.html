@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .header {
+      height: 50px;
+      background-color: pink;
+      text-align: center;
+      line-height: 50px;
+    }
+    .footer {
+      height: 60px;
+      background-color: green;
+      text-align: center;
+      line-height: 60px;
+      clear: both;
+    }
+    .container {
+      height: 100px;
+      padding-left: 200px;
+      padding-right: 300px;
+      background-color: yellow;
+    }
+    /* BFC 防止溢出 */
+    /* .container::after {
+      content: '';
+      display: block;
+      clear: both;
+    } */
+    .container .left {
+      background-color: red;
+      width: 200px;
+      margin-left: -100%;
+      /* 还要自己再左移一些 */
+      position: relative;
+      left: -200px;
+    }
+    .container .right {
+      background-color: purple;
+      width: 300px;
+      margin-right: -300px;
+    }
+    .container .content {
+      width: 100%;
+    }
+    .left, .right, .content {
+      float: left;
+      height: 100%;
+    }
+
+
+    .wrap {
+      height:30px;
+      width: 100%;
+      background-color: yellow;
+    }
+    .content2 {
+      margin-left: 200px;
+      margin-right: 300px;
+    }
+    .left2 {
+      height:30px;
+      width:200px;
+      background-color: red;
+      margin-left: -100%;
+      /* z-index: 1000; */
+    }
+    .right2 {
+      height:30px;
+      width: 300px;
+      background-color: purple;
+      margin-left: -300px;
+    }
+    /* 注意：这里是.wrap是float 而非 */
+    .left2, .right2, .wrap {  
+      float: left;
+    }
+  </style>
+</head>
+<body>
+  <!-- 区分圣杯和双飞翼的方法：看html形状 -->
+  <!-- 圣杯 双飞翼都需要浮动 -->
+  <!-- 圣杯 -->
+  <h3>圣杯</h3>
+  <div class="header">Header</div>
+  <div class="container">
+    <div class="content">content</div>
+    <div class="left">left</div>
+    <div class="right">right</div>
+  </div>
+  <div class="footer">Footer</div>
+
+  <h3>双飞翼</h3>
+  <!-- 双飞翼 -->
+  <div class="header">Header</div>
+  <div class="wrap">
+    <div class="content2">Content</div>
+  </div>
+  <div class="left2">Left</div>
+  <div class="right2">Right</div>
+  <div class="footer">Footer</div>
+</body>
+</html>

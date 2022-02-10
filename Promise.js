@@ -29,3 +29,18 @@ Promise._all = function(array) {
     }
   })
 }
+
+
+// Promise.race 
+Promise._race = function(array) {
+  return new Promise((resolve, reject) => {
+    for (let i = 0; i < array.length; i++) {
+      const item = array[i];
+      if (Object.prototype.toString.call(item) === '[object Promise]') {
+        item.then(resolve).catch(reject)
+      } else {
+        resolve(item)
+      }
+    }
+  })
+}

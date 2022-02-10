@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    /* 两列布局 */
+    .container {
+      height: 200px;
+      display: flex;
+      border:  1px solid black;
+    }
+    .container .box1 {
+      width: 200px;
+      background-color: pink;
+    }
+    .container .box2 {
+      /* width: 200; */
+      background-color: green;
+      flex-grow: 1;
+    }
+
+    /* 三列布局 */
+    .container2 {
+      height: 200px;
+      display: flex;
+      border:  1px solid black;
+    }
+    .container2 .box1 {
+      width: 200px;
+      background-color: pink;
+      flex-shrink: 0;
+    }
+    .container2 .box2 {
+      flex-grow: 1;
+      background-color: blue;
+    }
+    .container2 .box3 {
+      width: 100px;
+      background-color: red;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="box1">定宽</div>
+    <div class="box2">自适应</div>
+  </div>
+  <div class="container2">
+    <div class="box1">左定宽</div>
+    <div class="box2">自适应</div>
+    <div class="box3">右定宽</div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    /* 采用旋转遮盖方法 */
+    .triangle {
+      width: 100px; 
+      height: 100px;
+      background-color: red;
+      position: relative;
+    }
+    .triangle::after {
+      content: '';
+      position: absolute;
+      background-color: blue;
+      width: 40px;
+      height: 40px;
+      /* 这里的负数就用得很灵性 */
+      right: -20px;
+      top: 30px;
+      /* 这个是绕中心旋转吧？对的 */
+      transform: rotate(45deg);   
+      z-index: -1;
+    }
+
+
+    /* 利用border来解决 */
+    .triangle2 {
+      width:0;
+      height:0;
+      border: 40px solid blue;
+      border-left-color: transparent;
+      border-top-color: transparent;
+      border-bottom-color: transparent;
+    }
+  </style>
+</head>
+<body>
+  <div class="triangle"></div>
+  <div class="triangle2"></div>
+</body>
+</html>
