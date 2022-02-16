@@ -1,3 +1,4 @@
+// name 需是字符串， 该函数效果： 输入键名，返回键值
 function query(name) {
   const search = location.search;
   const p = new URLSearchParams(search);

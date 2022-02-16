@@ -12,3 +12,7 @@ class SingleDog {
     return SingleDog.instance;
   }
 }
+
+let s1 = SingleDog.getInstance();
+let s2 = SingleDog.getInstance();
+console.log(s1 === s2);    // true;

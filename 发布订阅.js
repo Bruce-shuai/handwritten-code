@@ -23,7 +23,7 @@ class EventEmitter {
   // 踢掉某个订阅者
   off(type, handler) {
     if(this.eventMap[type]) {
-      // >>> 效果是
+      // >>> 效果是,防止在splice的第一个参数出现-1问题  -1 >>> 0 是4294967295
       this.eventMap[type].splice(this.eventMap[type].indexOf(handler)>>>0,1)
     }
   }
@@ -33,7 +33,7 @@ class EventEmitter {
   emit(type, params) {
     // 假若该事件是有订阅的
     if (this.eventMap[type]) {
-      this.eventMap[type].forEach((handler, index) => {
+      this.eventMap[type].forEach((handler) => {
         handler(params)
       })
     }

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>图片懒加载</title>
+  <!-- https://juejin.cn/book/6844733750048210957/section/6844733750119514126 -->
+  <style>
+    .img {
+      width: 200px;
+      height: 200px;
+      background-color: gray;
+    }
+    .pic {
+      /* 一些img样式 */
+    }
+  </style>
+</head>
+<body>
+    <div class="container">
+      <div class="img">
+        <!-- 注意我们并没有为它引入真实的src -->
+        <!-- 这里的data-src 就很有意思~ -->
+        <img class="pic" alt="加载中" data-src="./images/1.png">
+      </div>
+      <div class="img">
+        <img class="pic" alt="加载中" data-src="./images/2.png">
+      </div>
+      <div class="img">
+        <img class="pic" alt="加载中" data-src="./images/3.png">
+      </div>
+      <div class="img">
+        <img class="pic" alt="加载中" data-src="./images/4.png">
+      </div>
+      <div class="img">
+        <img class="pic" alt="加载中" data-src="./images/5.png">
+      </div>
+       <div class="img">
+        <img class="pic" alt="加载中" data-src="./images/6.png">
+      </div>
+       <div class="img">
+        <img class="pic" alt="加载中" data-src="./images/7.png">
+      </div>
+       <div class="img">
+        <img class="pic" alt="加载中" data-src="./images/8.png">
+      </div>
+       <div class="img">
+        <img class="pic" alt="加载中" data-src="./images/9.png">
+      </div>
+       <div class="img">
+        <img class="pic" alt="加载中" data-src="./images/10.png">
+      </div>
+    </div>
+    <script>
+      // 懒加载中，有两个关键的值：一个是当前可视区域的高度，另一个是元素距离可视区域顶部的高度
+      // 可视区域的高度(兼容低版浏览器)
+      const viewHeight = window.innerHeight || document.documentElement.clientHeight;
+      // 获取所有的图片标签
+      const imgs = document.getElementsByTagName("img");
+      // 用于统计当前显示到了哪一张图片
+      let num = 0;
+
+      function lazyLoad() {
+        for (let i = 0; i < imgs.length; i++) {
+          let distance = viewHeight - imgs[i].getBoundingClientRect().top;
+          if (distance >= 0) {
+            // 给元素写入真实的src，展示图片
+            imgs[i].src = imgs[i].getAttribute("data-src");
+            num = i + 1;
+          }
+        }
+      }
+      window.addEventListener('scroll', lazyLoad, false);  // 注意，这个scroll 容易被触发，所以加一个防抖或节流是最好的
+    </script>
+</body>
+</html>

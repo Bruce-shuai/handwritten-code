@@ -1,58 +1,91 @@
-// https://www.ruanyifeng.com/blog/2011/06/designing_ideas_of_inheritance_mechanism_in_javascript.html
-// 继承
+// 五种继承方式
+// 原型链继承   构造函数继承   组合继承    组合寄生继承    class实现继承
+
 // 原型链继承
-// 注意：实例.__proto__ === 构造函数.prototype
-// function Animal() {
-//   this.colors = ['black', 'white'];
-// }
-// Animal.prototype.getColor = function () {
-//   return this.colors;
-// }
-// function Dog() {}
-// Dog.prototype = new Animal();
-
-// let dog1 = new Dog();   // dog1.__proto__ === Dog.prototype
-// dog1.colors.push('brown');
-
-// let dog2 = new Dog();   // dog2.__proto__ === Dog.prototype
-// console.log(dog2.colors);
-// // dog1 和 dog2 共享同一个Dog.prototype
-
-
-
-// 构造函数绑定：
-function Animal(){
-  this.species = "动物";
+function Animal() {
+  this.colors = ['black', 'white'];
 }
 
-function Cat(name, color) {
-  Animal.apply(this, arguments);
+Animal.prototype.getColor = function() {
+  return this.colors;
+}
+
+function Dog() {}
+Dog.prototype = new Animal();  // 为Animal的实例
+
+// 注意：构造函数的实例可以有多个，原型只有一个
+let dog1 = new Dog();
+dog1.colors.push('yellow');  
+let dog2 = new Dog();
+console.log(dog2.colors);   // ['black', 'white', 'yellow']  // 共享一个实例, 这实际上是不好的。以及给Dog传的参数无法传入到Animals
+
+
+
+// 构造函数继承 (优势在哪？) 上诉原型链的问题都可以解决
+function Animal(name) {
   this.name = name;
-  this.color = color;
+  this.getName = function() { return this.name }
+  this.colors = ['black', 'white'];
 }
 
-var cat1 = new Cat('大毛', '黄色')
-console.log(cat1.species);
+function Dog(name) {   // 在构造函数上传入的参数可以复用原型的方法
+  Animal.call(this, name)   // 这个阶段就复制了一份 ['black', 'white']
+}
 
-// prototype模式
-Cat.prototype = new Animal();
-Cat.prototype.constructor = Cat;
-var cat1 = new Cat('大毛', '黄色');
-alert(cat1.species);   // 动物
+Dog.prototype = new Animal();
 
-// 直接继承 prototype
-// 让Cat()跳过 Animal()，直接继承Animal.prototype
-// 这样做的优点是效率比较高（不用执行和建立Animal的实例了），
-// 比较省内存。缺点是 Cat.prototype和Animal.prototype现在指向了同一个对象，
-// 那么任何对Cat.prototype的修改，都会反映到Animal.prototype
-Cat.prototype = Animal.prototype;
-Cat.prototype.constructor = Cat;
-var cat1 = new Cat('大毛', '黄色')
-alert(cat1.species); // 动物
+let dog1 = new Dog();
+dog1.colors.push('yellow');  
+let dog2 = new Dog();
+console.log(dog2.colors); // ['black', 'white']  
 
-// 利用空对象作为中介
-// 这时候修改Cat的prototype就不会影响到Animal的prototype对象
-var F = function() {};
-F.prototype = Animal.prototype;
-Cat.prototype = new F();
-Cat.prototype.constructor = Cat;
+
+// 组合继承 （原型链继承+构造函数继承）
+
+function Animal(name) {
+  this.name = name;
+  this.colors = ['black', 'white']
+}
+
+Animal.prototype.getName = function () {
+  return this.name;
+}
+
+function Dog(name, age) {
+  Animal.call(this, name);
+  this.age = age;
+}
+
+Dog.prototype = new Animal();
+Dog.prototype.constructor = Dog;
+
+let dog1 = new Dog('奶昔', 2)
+dog1.colors.push('brown')
+let dog2 = new Dog('哈赤', 1)
+console.log(dog2) 
+// { name: "哈赤", colors: ["black", "white"], age: 1 }
+
+// function Animal(name) {
+//   this.name = name
+//   this.colors = ['black', 'white']
+// }
+// let obj = {}
+// Animal.call(obj, '测试')
+// obj
+// // {name: '测试', colors: Array(2)}
+
+
+// class 实现继承
+class Animal {
+  constructor(name) {
+    this.name = name;
+  }
+  getName() { return this.name; }
+}
+
+class Dog extends Animal {
+  constructor(name, age) {
+    super(name)
+    this.age = age;
+  }
+}

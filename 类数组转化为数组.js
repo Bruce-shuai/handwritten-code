@@ -3,3 +3,5 @@
 // let arr = [...arguments];
 
 // let arr = Array.from(arguments)
+
+// Array.prototype.concat.apply([],arguments)
