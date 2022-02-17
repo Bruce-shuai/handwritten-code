@@ -11,7 +11,7 @@ Animal.prototype.getColor = function() {
 }
 
 function Dog() {}
-Dog.prototype = new Animal();  // 为Animal的实例
+Dog.prototype = new Animal();  // 为Animal的实例  ---> 这里是原型链的关键
 
 // 注意：构造函数的实例可以有多个，原型只有一个
 let dog1 = new Dog();
@@ -29,7 +29,7 @@ function Animal(name) {
 }
 
 function Dog(name) {   // 在构造函数上传入的参数可以复用原型的方法
-  Animal.call(this, name)   // 这个阶段就复制了一份 ['black', 'white']
+  Animal.call(this, name)   // 这个阶段就复制了一份 ['black', 'white']   ---> 这里是构造函数形成的关键
 }
 
 Dog.prototype = new Animal();
@@ -57,7 +57,7 @@ function Dog(name, age) {
 }
 
 Dog.prototype = new Animal();
-Dog.prototype.constructor = Dog;
+Dog.prototype.constructor = Dog;   // 这一步也很重要
 
 let dog1 = new Dog('奶昔', 2)
 dog1.colors.push('brown')

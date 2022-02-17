@@ -20,7 +20,7 @@ Function.prototype.myCall = function(obj, ...args) {
   // 先判断是否传入了值
   obj = obj || window
   let fn = Symbol();    // 创建一个独一无二的属性
-  obj[fn] = this;       
+  obj[fn] = this;       // this 代指的是调用的函数
   let result = obj[fn](...args);
   delete obj[fn];
   return result;
@@ -28,7 +28,7 @@ Function.prototype.myCall = function(obj, ...args) {
 
 
 // apply ---> 代码逻辑和call非常相似(只不过这里借助的是arguments)
-Function.prototype.myApply = function(obj) {
+Function.prototype.myApply = function(obj) {  // 可以写成 obj, ...args吗
   obj = obj || window;
   let fn = Symbol();
   obj[fn] = this;

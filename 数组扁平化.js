@@ -10,4 +10,4 @@ function flat(arr) {
   return flat(res);
 }
 
-console.log(flat([1, 2, 3, [4, [5, 6]]]));
+console.log(flat([1, 2, 3, [4, [5, 6]]])); 

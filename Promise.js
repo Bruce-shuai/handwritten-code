@@ -14,8 +14,8 @@ Promise._all = function(array) {
       const item = array[i];
       if (Object.prototype.toString.call(item).slice(8, -1) === 'Promise') {
         item.then((data) => {
-          result[i] = data;
-          count++;
+          result[i] = data;    // 1
+          count++;             // 2
 
           // 异步结束标志
           if (count === array.length) {
@@ -23,8 +23,8 @@ Promise._all = function(array) {
           }
         }).catch(reject);
       } else {
-        result[i] = item;
-        count++;
+        result[i] = item;      // 1
+        count++;               // 2
       }
     }
   })
@@ -37,7 +37,7 @@ Promise._race = function(array) {
     for (let i = 0; i < array.length; i++) {
       const item = array[i];
       if (Object.prototype.toString.call(item) === '[object Promise]') {
-        item.then(resolve).catch(reject)
+        item.then(resolve).catch(reject);   // 只会执行一次
       } else {
         resolve(item)
       }
