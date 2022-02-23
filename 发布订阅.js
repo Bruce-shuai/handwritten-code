@@ -1,3 +1,4 @@
+// Event Bus 和 Event Emitter 都是一个意思那种...
 class EventEmitter {
   constructor() {
     // 在全局我们需要设置一个对象，来存储事件和监听函数之间的关系
@@ -37,6 +38,16 @@ class EventEmitter {
         handler(params)
       })
     }
+  }
+
+  // 为事件注册单次监听器
+  once(type, handler) {
+    // 对回调函数进行包装，使其执行完毕自动被移除
+    function fn(...args) {
+      handler(args);
+      this.off(type, fn)
+    }
+    this.on(type, fn);
   }
 }
 

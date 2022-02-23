@@ -3,3 +3,6 @@
 
 
 
+function test() {
+  console.log(Object.prototype.toString.call(arguments))
+}

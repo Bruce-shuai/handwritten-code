@@ -44,3 +44,68 @@ Promise._race = function(array) {
     }
   })
 }
+
+
+
+// 手写Promise --- 实习版本
+
+function CutePromise(executor) {
+  this.value = null;   // 成功结果
+  this.reason = null;  // 失败原因
+  this.status = 'pending';
+
+  // 缓存两个队列，维护 resolved 和 rejected 各自对应的处理函数
+  this.onResolvedQueue = [];
+  this.onRejectedQueue = [];
+
+  var self = this;
+
+  // 定义 resolve 函数
+  // 定义 reject 函数
+  function resolve(value) {
+    if (self.status !== 'pending') {
+      return;
+    }
+    self.value = value;
+    self.status = 'resolved';
+    setTimeout(function(){
+      // 批量执行 resolved 队列里的任务
+      self.onResolvedQueue.forEach(resolved => resolved(self.value)); 
+    });
+
+  }
+
+  function reject(reason) {
+    if (self.status !== 'pending') {
+      return;
+    }
+    self.reason = reason;
+    self.status = 'rejected';
+    setTimeout(function(){
+      // 批量执行 rejected 队列里的任务
+      self.onRejectedQueue.forEach(rejected => rejected(self.reason));
+    });
+  }
+
+  executor(resolve, reject)
+}
+
+CutePromise.prototype.then = function(onResolved, onRejected) {
+  if (typeof onResolved !== 'function') {
+    onResolved = function(x){ return x }
+  }
+  if (typeof onRejected !== 'function') {
+    onRejected = function(e){ throw e }
+  }
+
+  var self = this;
+  if (self.status === 'resolved') {
+    onResolved(self.value);
+  } else if (self.status === 'rejected') {
+    onRejected(self.reason);
+  } else if (self.status === 'pending') {
+    self.onResolvedQueue.push(onResolved);
+    self.onRejectedQueue.push(onRejected);
+  }
+  return this;
+}

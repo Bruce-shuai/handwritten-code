@@ -33,7 +33,7 @@ function switchLetterCase2(s) {
   if (length === 0) return res;
   for (let i = 0; i < length; i++) {
     const c = s[i];
-    const code = c.charCodeAt(0);
+    const code = c.charCodeAt(0);  // 返回第一个字符的ascii码
     if (code >= 65 && code <= 90) {
       res += c.toLowerCase();
     } else if (code >= 97 && code <= 122) {
