@@ -45,3 +45,19 @@ let obj2 = {
 }
 let copy = deepCopy(obj2);
 console.log(copy);
+
+
+// 深拷贝，考虑各种类型的版本
+// 考虑Object Array Map Set
+// 考虑循环引用 --> 使用WeakMap
+function cloneDeep(obj, map = new WeakMap()) {
+  if (typeof obj !== 'object' || obj == null) return obj
+
+  // 避免循环引用
+  const objFromMap = map.get(obj);
+  if (objFromMap) return objFromMap;
+  let target = {};
+  map.set(obj, target);
+
+  return target;
+}

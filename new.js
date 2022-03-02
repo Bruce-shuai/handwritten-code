@@ -29,5 +29,5 @@ function create(Con, ...args) {
   let obj = Object.create(Con.prototype);
   // 绑定this，执行构造函数
   let res = Con.apply(obj, args);   // 执行一次构造函数，看是否有返回值，且返回值是否是对象 (有待研究)
-  return res instanceof Object ? res : obj;   // 有一个问题： obj是没有绑定this的呀！ 但是绝大多数情况返回的是res
+  return res instanceof Object ? res : obj;   // 这里是为了忽略构造函数返回原始值的情况...
 }
