@@ -30,6 +30,33 @@ Promise._all = function(array) {
   })
 }
 
+// Promise.all 讲究的是传入数组，返回一个promise实例，且resove传入的是数据做货返回的结果
+Promise._all2 = function(array) {
+  return new Promise((resolve, reject) => {
+    let count = 0;    // 计数器  
+    let res = [];   
+
+    for (let i = 0; i < array.length; i++) {
+      let item = array[i];   
+
+      if (Object.prototype.toString.call(item).slice(8, -1) === 'Promise') {
+        item.then(data => {
+          res[i] = data;
+          count++;
+
+          if (count === array.length) {
+            resolve(res)
+          }
+        }).catch(reject)
+      } else {
+        res[i] = item;   
+        count++;
+      }
+    }
+  })
+}
+
+
 
 // Promise.race 
 Promise._race = function(array) {
@@ -46,156 +73,95 @@ Promise._race = function(array) {
 }
 
 
+Promise._race2 = function(array) {
+  return new Promise((resolve, reject) => {
 
-// 手写Promise --- 实习版本
-
-// function CutePromise(executor) {
-//   this.value = null;   // 成功结果
-//   this.reason = null;  // 失败原因
-//   this.status = 'pending';
-
-//   // 缓存两个队列，维护 resolved 和 rejected 各自对应的处理函数
-//   this.onResolvedQueue = [];
-//   this.onRejectedQueue = [];
-
-//   var self = this;
-
-//   // 定义 resolve 函数
-//   // 定义 reject 函数
-//   function resolve(value) {
-//     if (self.status !== 'pending') {
-//       return;
-//     }
-//     self.value = value;
-//     self.status = 'resolved';
-//     setTimeout(function(){
-//       // 批量执行 resolved 队列里的任务
-//       self.onResolvedQueue.forEach(resolved => resolved(self.value)); 
-//     });
-
-//   }
-
-//   function reject(reason) {
-//     if (self.status !== 'pending') {
-//       return;
-//     }
-//     self.reason = reason;
-//     self.status = 'rejected';
-//     setTimeout(function(){
-//       // 批量执行 rejected 队列里的任务
-//       self.onRejectedQueue.forEach(rejected => rejected(self.reason));
-//     });
-//   }
-
-//   executor(resolve, reject)
-// }
-
-// CutePromise.prototype.then = function(onResolved, onRejected) {
-//   if (typeof onResolved !== 'function') {
-//     onResolved = function(x){ return x }
-//   }
-//   if (typeof onRejected !== 'function') {
-//     onRejected = function(e){ throw e }
-//   }
-
-//   var self = this;
-//   if (self.status === 'resolved') {
-//     onResolved(self.value);
-//   } else if (self.status === 'rejected') {
-//     onRejected(self.reason);
-//   } else if (self.status === 'pending') {
-//     self.onResolvedQueue.push(onResolved);
-//     self.onRejectedQueue.push(onRejected);
-//   }
-//   return this;
-// }
-
-
-// 这个实习版本的Promise能够执行到第四步就可以了
-
-const PENDING = 'pending';
-const REJECTED = 'rejected';
-const FULFILLED = 'fulfilled';
-
-class MyPromise {
-  constructor(executor) {
-    executor(this.resolve, this.reject);
-  }
-
-  // 这个是类的实例属性，效果和放在constructor里面的 this.status 效果一样
-  status = PENDING;  
-  value = null;   
-  reason = null;
-
-  onFulfilledCallbacks = [];
-  onRejectedCallbacks = [];
-
-  resolve = (value) => {
-    // 这里对status用this是因为，这里使用的是箭头函数
-    if (this.status === PENDING) {
-      this.status = FULFILLED;
-      this.value = value;
-      while (this.onFulfilledCallbacks.length) {
-        // Array.shift() 取出数组第一个元素，然后（）调用，shift不是纯函数，取出后，数组将失去该元素，直到数组为空
-        this.onFulfilledCallbacks.shift()(value)
+    for (let i = 0; i < array.length; i++) {
+      const item = array[i]
+      if (Object.prototype.toString.call(item) === '[object Promise]') {
+        item.then(data => {
+          resolve(data);
+        }).catch(reject)
+      } else {
+        resolve(item)
       }
     }
-  }
-
-  reject = (reason) => {
-    if (this.status === PENDING) {
-      this.status = REJECTED;
-      this.reason = reason;
-      while (this.onRejectedCallbacks.length) {
-        this.onRejectedCallbacks.shift()(reason)
-      }
-    }
-  }
-
-  then(onFulfilled, onRejected) {
-    const promise2 = new MyPromise((resolve, reject) => {
-      if (this.status === FULFILLED) {
-        const x = onFulfilled(this.value);  // onFulfilled 会返回在then里面的回调中的返回值
-        resolvePromise(promise2, x, resolve, reject);
-      } else if (this.status === REJECTED) {
-        onRejected(this.reason)
-      } else if (this.status === PENDING) {
-        this.onFulfilledCallback.push(onFulfilled);
-        this.onRejectedCallback.push(onRejected);
-      }
-    })
-    return promise2;
-  }
-}
-
-// 发挥了什么作用？将then里面回调的返回内容进行promise消化
-function resolvePromise(promise2, x, resolve, reject) {
-  if (promise2 === x) {
-    return reject(new Error('xxx'))
-  }
-  if (x instanceof MyPromise) {
-    // 目的是将x的状态转变为fulfilled 或者 rejected
-    x.then(resolve, reject);  // 这是一个新的Promise的状态
-  } else {
-    // 普通值
-    resolve(x)
-  }
-}
-const promise = new MyPromise((resolve, reject) => {
-  // 目前这里只处理同步的问题
-  resolve('success')
-})
-
-function other () {
-  return new MyPromise((resolve, reject) =>{
-    resolve('other')
   })
 }
-promise.then(value => {
-  console.log(1)
-  console.log('resolve', value)
-  return other()
-}).then(value => {
-  console.log(2)
-  console.log('resolve', value)
+
+
+// https://www.bilibili.com/video/BV1RR4y1p7my?from=search&seid=2255547556596525016&spm_id_from=333.337.0.0
+class MyPromise {
+  static PENDING = '待定';
+  static FULFILLED = '成功';
+  static REJECTED = '失败';
+
+  constructor(func) {
+    this.status = MyPromise.PENDING;
+    this.result = null;  
+    this.resolveCallbacks = [];
+    this.rejectCallbacks = [];
+    // 异常情况就执行reject
+    try {
+      // this绑定是为了让resolve 和 reject 的this指向某个实例
+      func(this.resolve.bind(this), this.reject.bind(this));   
+    } catch (e) {
+      this.reject(e)
+    }
+  }
+
+  resolve(result) {
+    // resolve, reject 是要在当前作用域下最后执行的，所以用setTimeout来实现
+    setTimeout(() => {
+      if (this.status === MyPromise.PENDING) {
+        this.status = MyPromise.FULFILLED;
+        this.result = result;
+        this.resolveCallbacks.forEach(cb => cb(result))
+      }
+    })
+  }
+  reject(result) {
+    setTimeout(() => {
+      if (this.status === MyPromise.PENDING) {
+        this.status = MyPromise.REJECTED;
+        this.result = result;
+        this.rejectCallbacks.forEach(cb => cb(result))
+      }
+    })
+  }
+
+  then(onFULFILLED, onREJECTED) {
+    // 返回一个新的promise实例
+    return new MyPromise((resolve, reject) => {
+      // 把不是函数的参数改为参数(promise规范)
+      onFULFILLED = typeof onFULFILLED === 'function' ? onFULFILLED : () => {}
+      onREJECTED = typeof onREJECTED === 'function' ? onREJECTED : () => {}
+      // 只能执行两个参数中的其中一个
+      if (this.status === MyPromise.PENDING) {
+        // 让then里的回调稍后执行，让resolve执行后再执行then里面的内容
+        this.resolveCallbacks.push(onFULFILLED)
+        this.rejectCallbacks.push(onREJECTED)
+      }
+      if (this.status === Promise.FULFILLED) {
+        // 设置异步执行
+        setTimeout(() => {
+          onFULFILLED(this.result)
+        })
+      } 
+      if (this.status === Promise.REJECTED) {
+        setTimeout(() => {
+          onREJECTED(this.result)
+        })
+      }
+    })
+  }
+}
+
+let promise = new MyPromise((resolve, reject) => {
+  // resolve('这次一定')
+  throw new Error('白嫖不成功');   // 如果是抛出错误，则执行reject
 })
+promise.then(
+  result => {console.log(result)},
+  result => {console.log(result.message)},
+)

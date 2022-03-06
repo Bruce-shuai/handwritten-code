@@ -1,6 +1,6 @@
 function flat(arr) {
   // 这种扁平需要递归执行才行...
-  const isDeep = arr.some(item => item instanceof Array)  // 检验是否有多层数组
+  const isDeep = arr.some(item => item instanceof Array)  // 检验是否有多层数组 some只要有一个元素满足就可以
   if (!isDeep) {
     return arr;
   }

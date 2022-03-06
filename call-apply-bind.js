@@ -27,6 +27,17 @@ Function.prototype.myCall = function(obj, ...args) {
 }
 
 
+
+Function.prototype._call = function (obj = window, ...args) {
+  let that = this;
+  let symbol = Symbol();   // 没有new
+  obj[symbol] = that;
+  let res = obj[symbol](...args);
+  delete obj[symbol];
+  return res;   
+}
+
+
 // apply ---> 代码逻辑和call非常相似(只不过这里借助的是arguments)
 Function.prototype.myApply = function(obj) {  // 可以写成 obj, ...args吗
   obj = obj || window;
@@ -41,6 +52,19 @@ Function.prototype.myApply = function(obj) {  // 可以写成 obj, ...args吗
   delete obj[fn];
   return result;
 }
+
+Function.prototype._apply = function(obj = window) {
+  let symbol = Symbol();
+  obj[symbol] = this;
+  if (arguments[1]) {
+    let res = obj[symbol]([...arguments[1]]);
+  } else {
+    res = obj[fn]();
+  }
+  delete obj[symbol]
+  return res;
+}
+
 
 // bind  最后返回的是一个函数
 
@@ -59,6 +83,17 @@ Function.prototype.myBind = function(obj) {
       return new that(...args, ...arguments);   // 
     }
     // that 是为了锁定住最早调用bind的方法是谁
+    return that.apply(obj, [...args, ...arguments]);
+  }
+}
+
+Function.prototype._bind = function(obj = window, ...args) {
+  let that = this; 
+  // 返回一个函数
+  return function func() {
+    if (this instanceof func) {
+      return new that(...args, ...arguments);
+    }
     return that.apply(obj, [...args, ...arguments]);
   }
 }

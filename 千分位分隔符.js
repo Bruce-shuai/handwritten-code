@@ -13,3 +13,5 @@ function formatNum(number) {
 }
 let number = 23456789;
 console.log(formatNum(number))
+
+

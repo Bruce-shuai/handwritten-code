@@ -1,6 +1,7 @@
 // 节流
 // 在某段时间内，不管你触发了多少次回调，我都只认第一次，并在计时结束时给予响应
 function throttle(fn, interval) {
+  // 闭包的变量估计会覆盖原来的名字相同变量
   let last = 0;
 
   return function() {
@@ -34,3 +35,5 @@ let debounce = function(fn, delay) {
     }, delay);
   }
 }
+
+

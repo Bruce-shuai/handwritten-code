@@ -7,7 +7,7 @@ function visitNode(n) {
     // 文本
     // console.info('Text node ---', n.textContent?.trim()) // ?.trim 用于去掉空格  注意：换行也算一个text node
     // 去掉换行节点
-    const t = n.textContent?.trim();
+    const t = n.textContent?.trim();     // 这个可以去掉字符串的首尾空格
     if (t) {
       console.info('Text node ---', t);
     }
@@ -38,13 +38,13 @@ function bfs(root) {
   const queue = [];   
   queue.push(root);
   while (queue.length > 0) {
-    const curNode = queue.pop();
+    const curNode = queue.shift();
     if (curNode == null) break;
 
-    visited(curNode);
+    visitNode(curNode);
     
     // 子节点入队
-    const childNodes = curNode.childNodes;
+    const childNodes = curNode.childNodes;   // .childNodes 这是一个关键点
     if (childNodes.length) {
       childNodes.forEach(child => queue.push(child))
     }

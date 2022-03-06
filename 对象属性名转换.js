@@ -1,4 +1,4 @@
-// bfc
+// 广度优先遍历  --->  套路其实都差不多
 function test(obj) {
   let queue = [];
   queue.push(obj);
@@ -20,12 +20,13 @@ function test(obj) {
 }
 
 const a = {
-  a_y: {
-    a_z: {
-      y_x: 6
+  'a_y': {
+    'a_z': {
+      'y_x': 6
     },
-    b_c: 1
+    'b_c': 1
   }
 }
 
 test(a)
+
