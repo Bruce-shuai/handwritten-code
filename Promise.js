@@ -56,6 +56,28 @@ Promise._all2 = function(array) {
   })
 }
 
+Promise._all = function (array) {
+  return new Promise((resolve, reject) => {
+    let count = 0;    // 计数器
+    let res = [];
+    for (let i = 0; i < array.length; i++) {
+      let item = array[i];
+
+      if (Object.prototype.toString.call(item).slice(8, -1) === 'Promise') {
+        item.then((data) => {
+          count++;
+          res[i] = data; 
+          if (count === array.length) {
+            resolve(res)
+          }
+        }).catch(reject)
+      } else {
+        count++;
+        res[i] = item;
+      }
+    }
+  })
+}
 
 
 // Promise.race 
@@ -165,3 +187,65 @@ promise.then(
   result => {console.log(result)},
   result => {console.log(result.message)},
 )
+
+
+
+
+class MyPromise {
+  static PENDING = '加载';
+  static FULFILLED = '成功';
+  static REJECTED = '失败';
+
+  constructor(func) {
+    this.result = null; 
+    this.status =  MyPromise.PENDING
+    this.resolveCallbacks = [];    
+    this.rejectCallbacks = [];
+    try {
+      func(this.reject.bind(this), this.resolve.bind(this));    
+    } catch (e) {
+      this.reject(e);
+    }
+  }
+
+  resolve(result) {
+    setTimeout(() => {   // 1
+      if (this.status === MyPromise.PENDING) {
+        this.result = result;
+        this.status = MyPromise.FULFILLED;
+        this.resolveCallbacks.forEach(cb => cb(result));
+      }
+    })
+  }
+  reject(result) {
+    setTimeout(() => {  // 2
+      if (this.status === MyPromise.PENDING) {
+        this.result = result;
+        this.status = MyPromise.REJECTED;
+        this.rejectCallbacks.forEach(cb => cb(result));
+      }
+    })
+  }
+
+  then(onFULFILLED, onREJECTED) {
+    return new Promise((resolve, reject) => {
+      onFULFILLED = typeof onFULFILLED === 'function' ? onFULFILLED : () => {}
+      onREJECTED = typeof onREJECTED === 'function' ? onREJECTED : () => {}
+  
+      if (this.status === MyPromise.PENDING) {
+        this.resolveCallbacks.push(onFULFILLED);
+        this.rejectCallbacks.push(onREJECTED);
+      }
+      if (this.status === MyPromise.FULFILLED) {
+        setTimeout(() => { // 3
+          onFULFILLED(this.result)
+        })
+      }
+      if (this.status === MyPromise.REJECTED) {
+        setTimeout(() => { // 4
+          onREJECTED(this.result) 
+        })
+      }
+    })
+  }
+}

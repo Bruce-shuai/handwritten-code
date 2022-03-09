@@ -1,7 +1,7 @@
 // name 需是字符串， 该函数效果： 输入键名，返回键值
 function query(name) {
   const search = location.search;
-  const p = new URLSearchParams(search);
+  const p = new URLSearchParams(search);   // 注意：这里是有new的
   return p.get(name)
 }
 
@@ -24,7 +24,7 @@ function getParams(url) {
     arr.forEach(item => {
       const key = item.split('=')[0];
       const val = item.split('=')[1];
-      res[key] = decodeURIComponent(val);
+      res[key] = decodeURIComponent(val);      // 这里是一个亮点
     })
   }
   return res;

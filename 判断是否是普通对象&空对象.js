@@ -3,7 +3,7 @@ function isEmptyObj(obj) {
 
   // for……in 会遍历原型上可枚举的类型
   for (let key in obj) {
-    if (obj.hasOwnProperty(key)) {
+    if (obj.hasOwnProperty(key)) {   // hasOwnProperty 这个属性是要注意的
       return false;
     }
   }

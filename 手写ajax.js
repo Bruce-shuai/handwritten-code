@@ -47,7 +47,7 @@ function ajax(url, fn) {
   xhr.onreadystatechange = function () {
     if (xhr.readyState == 4) {
       if (xhr.status == 200) {
-        fn(xhr.responseText);
+        fn(xhr.responseText);   // 这个responseText有点意思...
       }
     }
   }

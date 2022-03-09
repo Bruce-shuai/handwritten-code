@@ -2,14 +2,14 @@
 // 执行fn，中间状态返回函数，如add(1) 或者 add(1)(2)
 // 最后返回执行结果，如 add(1)(2)(3)
 function curry(fn) {
-  const fnArgsLength = fn.length;   // 这样可以算出传入函数的参数长度
+  const fnArgsLength = fn.length;   // 这样可以算出传入函数的参数长度  -->  这一步很厉害
   let args = [];
 
   // 别用箭头函数
   function calc(...newArgs) {
     args = [
-      ...args,   
-      ...newArgs
+      ...args,     //闭包
+      ...newArgs   //这个放在后面
     ]
     if (args.length < fnArgsLength) {
       // 参数不够，返回函数

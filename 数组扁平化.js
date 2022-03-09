@@ -11,3 +11,17 @@ function flat(arr) {
 }
 
 console.log(flat([1, 2, 3, [4, [5, 6]]])); 
+
+
+
+
+
+function flat(array) {
+  let isDeep = array.some(item => item instanceof Array);
+  if(!isDeep) {
+    return array;
+  }
+  let newArr = Array.prototype.concat.apply([], array)
+  // 这种一般都会递归
+  return flat(newArr)
+}
