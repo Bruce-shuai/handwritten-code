@@ -57,18 +57,19 @@ Promise._all2 = function(array) {
 }
 
 Promise._all = function (array) {
+  let count = 0; // 计数器
+  let len = array.length;
+  let res = [];
   return new Promise((resolve, reject) => {
-    let count = 0;    // 计数器
-    let res = [];
     for (let i = 0; i < array.length; i++) {
       let item = array[i];
-
-      if (Object.prototype.toString.call(item).slice(8, -1) === 'Promise') {
+      if (Object.prototype.toString.call(item) === '[object Promise]') {
         item.then((data) => {
+          res[i] = data;
           count++;
-          res[i] = data; 
+
           if (count === array.length) {
-            resolve(res)
+            resolve(res);
           }
         }).catch(reject)
       } else {
@@ -133,7 +134,7 @@ class MyPromise {
   }
 
   resolve(result) {
-    // resolve, reject 是要在当前作用域下最后执行的，所以用setTimeout来实现
+    // resolve, reject 是要在当前作用域下最后执行的，所以用setTimeout来实现  有4个setTimeout...
     setTimeout(() => {
       if (this.status === MyPromise.PENDING) {
         this.status = MyPromise.FULFILLED;

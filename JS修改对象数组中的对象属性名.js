@@ -27,7 +27,7 @@ const changeArr = function (arr) {
     if (item.children) {
       res.children = item.children.map(data =>{return {code: data.id, name: data.title}})
     }
-    return res;
+    return res;  // 有返回值
   })
   return newArr;
 }

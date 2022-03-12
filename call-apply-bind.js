@@ -18,25 +18,13 @@
 // 复杂一点的
 Function.prototype.myCall = function(obj, ...args) {
   // 先判断是否传入了值
-  obj = obj || window
+  obj = obj || window   // 考虑兼容性问题
   let fn = Symbol();    // 创建一个独一无二的属性
   obj[fn] = this;       // this 代指的是调用的函数
-  let result = obj[fn](...args);
+  let result = obj[fn](...args);   // 要返回这个值的
   delete obj[fn];
   return result;
 }
-
-
-
-Function.prototype._call = function (obj = window, ...args) {
-  let that = this;
-  let symbol = Symbol();   // 没有new
-  obj[symbol] = that;
-  let res = obj[symbol](...args);
-  delete obj[symbol];
-  return res;   
-}
-
 
 // apply ---> 代码逻辑和call非常相似(只不过这里借助的是arguments)
 Function.prototype.myApply = function(obj) {  // 可以写成 obj, ...args吗
@@ -54,10 +42,10 @@ Function.prototype.myApply = function(obj) {  // 可以写成 obj, ...args吗
 }
 
 Function.prototype._apply = function(obj = window) {
-  let symbol = Symbol();
+  let symbol = Symbol();   // 注意：使用Symbol 就不用加new
   obj[symbol] = this;
   if (arguments[1]) {
-    let res = obj[symbol]([...arguments[1]]);
+    let res = obj[symbol]([...arguments[1]]);  // 这里注意一下！
   } else {
     res = obj[fn]();
   }
@@ -92,7 +80,20 @@ Function.prototype._bind = function(obj = window, ...args) {
   // 返回一个函数
   return function func() {
     if (this instanceof func) {
-      return new that(...args, ...arguments);
+      return new that(...args, ...arguments);  // 顺序注意：毕竟要覆盖，这里是没有中括号的
+    }
+    return that.apply(obj, [...args, ...arguments]);
+  }
+}
+
+
+
+Function.prototype.mybind = function(obj, ...args) {
+  let that = this;
+  
+  return function func() {
+    if (this instanceof func) {
+      return new that(...args, ...arguments);  // 没有括号
     }
     return that.apply(obj, [...args, ...arguments]);
   }

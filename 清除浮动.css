@@ -1,5 +1,5 @@
 .clearfix::after {
   content: "";
-  display: block;
+  display: block; /* 这里要注意一下 */
   clear: both;
 }

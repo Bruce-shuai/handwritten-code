@@ -5,7 +5,7 @@ function test(obj) {
 
   while (queue.length > 0) {
     let curObj = queue.shift();
-    let keys = Object.keys(curObj);
+    let keys = Object.keys(curObj);  // Object.keys
     let len = keys.length;
     for (let i = 0; i < len; i++) {
       let newKey = keys[i].replace('_', '');

@@ -23,11 +23,10 @@ function dfs(root) {
   visitNode(root);
   const childNodes = root.childNodes  // .childNodes 和 .children 不一样  .childNodes 获取包含所有的node类型。.children 是只获取元素不获取文本和注释
   if (childNodes.length) {
-    childNodes.forEach(child => {
+    childNodes.forEach(child => {     // forEach遍历可迭代的
       dfs(child);   // 递归
     })
   }
-
 }
 
 

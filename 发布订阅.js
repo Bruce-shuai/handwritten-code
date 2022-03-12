@@ -25,10 +25,9 @@ class EventEmitter {
   off(type, handler) {
     if(this.eventMap[type]) {
       // >>> 效果是,防止在splice的第一个参数出现-1问题  -1 >>> 0 是4294967295
-      this.eventMap[type].splice(this.eventMap[type].indexOf(handler)>>>0,1)
+      this.eventMap[type].splice(this.eventMap[type].indexOf(handler)>>>0,1)   // splice方法
     }
   }
-  
 
   // 发布
   emit(type, params) {
@@ -43,7 +42,7 @@ class EventEmitter {
   // 为事件注册单次监听器
   once(type, handler) {
     // 对回调函数进行包装，使其执行完毕自动被移除
-    function fn(...args) {
+    function fn(...args) {  // 这里的args 是emit的时候参数
       handler(args);
       this.off(type, fn)
     }

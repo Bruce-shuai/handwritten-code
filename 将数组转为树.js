@@ -16,18 +16,18 @@ const arr = [
 
 function convert(arr) {
   // 用于 id 和 treeNode 的映射
-  const idToTreeNode = new Map();   
+  const idToTreeNode = new Map();  // id, 父节点 
 
   let root = null;  
   arr.forEach(item => {
     const {id, name, parentId} = item;
 
     // 定义 tree node 并加入 map
-    const treeNode = { id, name };
+    const treeNode = { id, name };   // 创建树节点
     idToTreeNode.set(id, treeNode);
 
     // 找到 parentNode 并加入到它的children
-    const parentNode = idToTreeNode.get(parentId);   // 这种写法是需要依赖数组的顺序是从小到大放置的
+    const parentNode = idToTreeNode.get(parentId);   // 这种写法是需要依赖数组的顺序是从小到大放置的   这里赋值的也是节点的地址
     if (parentNode) {
       if (parentNode.children == null) parentNode.children = [];
       parentNode.children.push(treeNode);
@@ -38,8 +38,6 @@ function convert(arr) {
   })
   return root;
 }
-
-
 
 // 树转数组
 // 广度优先
@@ -68,37 +66,37 @@ const obj = {
   ]
 }
 
-
+// map + bfs
 function convert(root) {
-    // Map
-    const nodeToParent = new Map();
-    const arr = [];
+  // Map
+  const nodeToParent = new Map();  // 子节点 父节点
+  const arr = [];
 
-    // 广度优先遍历 队列
-    const queue = [];   
-    queue.unshift(root);   // 根节点 入队
+  // 广度优先遍历 队列
+  const queue = [];   
+  queue.push(root);   // 根节点 入队... unshift才是注入
 
-    while (queue.length > 0) {
-      const curNode = queue.pop();
-      if (curNode == null) break;
+  while (queue.length > 0) {
+    const curNode = queue.shift();
+    if (curNode == null) break;
 
-      // children = []是默认值的意思
-      const {id, name, children = []} = curNode;
+    // children = []是默认值的意思
+    const {id, name, children = []} = curNode;
 
-      // 创建数组item 并 push
-      const parentNode = nodeToParent.get(curNode);
-      const parentId = parentNode?.id || 0;   // 如果是0就是根结点
-      const item = { id, name, parentId };
-      arr.push(item)
+    // 创建数组item 并 push
+    const parentNode = nodeToParent.get(curNode);  // 查找是否有父节点
+    const parentId = parentNode?.id || 0;   // 如果是0就是根结点 --> 这里也是为了方便获取parentId
+    const item = { id, name, parentId };    // 创建新的对象
+    arr.push(item)
 
-      // 子节点入队
-      children.forEach(child => {
-        // 映射 parent
-        nodeToParent.set(child, curNode);
+    // 子节点入队
+    children.forEach(child => {
+      // 映射 parent
+      nodeToParent.set(child, curNode);
 
-        // 入队
-        queue.unshift(child)
-      })
-    }
-    return arr;
+      // 入队
+      queue.push(child)
+    })
+  }
+  return arr;
 }

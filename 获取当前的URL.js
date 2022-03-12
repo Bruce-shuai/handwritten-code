@@ -17,7 +17,7 @@ function query() {
 // 方法二：split大法
 function getParams(url) {
   const res = {};
-  if (url.includes('?')) {
+  if (url.includes('?')) {  // include方法也很有意思
     const str = url.split('?')[1];
 
     const arr = str.split('&');

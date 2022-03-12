@@ -31,7 +31,7 @@ let debounce = function(fn, delay) {
       clearTimeout(timer);
     }
     timer = setTimeout(function() {
-      fn.apply(context, args);    // 额外加的点
+      fn.apply(context, args);    // 额外加的点  -->  fn是调用者, context 也是内部存放的
     }, delay);
   }
 }

@@ -6,7 +6,7 @@ function flat(arr) {
   }
   // 利用concat来扁平，concat可以扁平一层
   // 有个疑问: 为什么 [].concat(arr) 达不到这样的效果呢？ --> 有待思考
-  const res = Array.prototype.concat.apply([], arr)   // ---> 用的是apply方法
+  const res = Array.prototype.concat.apply([], arr)   // ---> 用的是apply方法  注意：[]， arr的顺序
   return flat(res);
 }
 

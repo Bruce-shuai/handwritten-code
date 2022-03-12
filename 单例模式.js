@@ -5,7 +5,7 @@ class SingleDog {
   // show() {
   //   console.log('我是一个单例对象')
   // }
-  static getInstance() {
+  static getInstance() {  // 注意，这是静态方法
     if (!SingleDog.instance) {
       SingleDog.instance = new SingleDog();
     }
