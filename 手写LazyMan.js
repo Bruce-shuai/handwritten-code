@@ -68,7 +68,7 @@ class LazyMan {
   eat(food) {
     function task() {
       console.log(`${this.name}在吃${food}`)
-      this.next();
+      this.next();  // 这个有点意思
     }
     this.tasks.push(task);
     return this;  // 链式调用
@@ -81,6 +81,41 @@ class LazyMan {
       }, time * 1000)
     }
     this.tasks.push(task)
-    return this;  // 链式调用
+    return this;  // 链式调用  -> 这里是关键
+  }
+}
+
+
+class LazyMan {
+  constructor() {
+    this.queue = [];
+    setTimeout(() => {
+      this.next();
+    })
+  }
+
+  next() {
+    if (this.queue.length) {
+      let curTask = this.queue.shift();
+      curTask();
+    }
+  }
+  eat(food) {
+    function task() {
+      console.log('正在吃东西', food);
+      this.next();
+    }
+    this.queue.push(task)
+    return tihs;
+  }
+  sleep(time) {
+    function task() {
+      setTimeout(() => {
+        console.log('正在sleep')
+        this.next();
+      }, time);
+    }
+    this.queue.push(task)
+    return this;
   }
 }

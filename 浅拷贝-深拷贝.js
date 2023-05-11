@@ -1,7 +1,7 @@
 // 浅拷贝 -->  2种方法
 let obj = {'a': 1};
 let b = {...obj};
-let c = Object.assign({}, obj);
+let c = Object.assign({}, obj);   // Object.assign({}, obj)
 
 console.log(b, b === obj);
 console.log(c, c === obj);
@@ -27,7 +27,7 @@ function deepCopy(obj) {
 
   for (let key in obj) {
     // 保证key不是原型链上的
-    if (obj.hasOwnProperty(key)) {
+    if (obj.hasOwnProperty(key)) {     // hasOwnProperty...
       dist[key] = deepCopy(obj[key]);
     }
   }

@@ -1,5 +1,5 @@
 // 题目 将 数组 中所有id变为code，所有title变为name
-const list = [
+const list = [    // 注意：这是一个数组，所以不能用bfs，而是用map来解决
   {
     id: 'a',
     title: 'A'
@@ -34,3 +34,16 @@ const changeArr = function (arr) {
 
 const arr = changeArr(list);
 console.log(arr);
+
+const changeName = (array) => {
+  return array.map(item => {
+    let obj = {};
+    obj['code'] = item.id;  
+    obj['name'] = item.title; 
+
+    if (item?.children) {
+      obj.children = changeName(item.children)
+    }
+    return obj
+  })
+}

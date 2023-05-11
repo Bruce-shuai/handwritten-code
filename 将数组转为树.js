@@ -14,6 +14,31 @@ const arr = [
   { id: 6, name: '部门F', parentId: 3 },
 ]
 
+
+
+function convert(arr) {   // 数组转树
+  const idToTreeNode = new Map();   // 父id 转 父节点
+  let root = null; 
+  arr.forEach((item) => {
+    const {id, name, parentId} = item;
+    const node = {id, name};  
+    idToTreeNode.set(id, node); 
+
+    // 通过父id找父节点
+    let parentNode = idToTreeNode.get(parentId);
+
+    if (!parentNode) {  // 如果节点没有找到
+      root = node;
+    } else {
+      if (!parentNode.children) {
+        parentNode.children = [];
+      }
+      parentNode.children.push(node);
+    }
+  })
+  return root;
+}
+
 function convert(arr) {
   // 用于 id 和 treeNode 的映射
   const idToTreeNode = new Map();  // id, 父节点 
@@ -24,7 +49,7 @@ function convert(arr) {
 
     // 定义 tree node 并加入 map
     const treeNode = { id, name };   // 创建树节点
-    idToTreeNode.set(id, treeNode);
+    idToTreeNode.set(id, treeNode);  // 先就设
 
     // 找到 parentNode 并加入到它的children
     const parentNode = idToTreeNode.get(parentId);   // 这种写法是需要依赖数组的顺序是从小到大放置的   这里赋值的也是节点的地址
@@ -34,10 +59,14 @@ function convert(arr) {
     }
 
     // 找到根节点
-    if (parentId === 0) root = treeNode
+    if (parentId === 0) root = treeNode  // 这里的root 很有意思
   })
   return root;
 }
+
+
+
+
 
 // 树转数组
 // 广度优先
@@ -65,6 +94,37 @@ const obj = {
     }
   ]
 }
+
+
+function convert(root) {
+  const nodeToParent = new Map();  // 子节点对照父节点
+  const queue = [];
+  const arr = [];   // 创一个数组来作为最后的结果
+  // bfs
+  queue.push(root);   
+
+  while (queue.length) {
+    const node = queue.shift();
+    
+    node.children?.forEach((item) => {
+      nodeToParent.set(item, node);
+      queue.push(item);
+    })
+    let parentId;
+    const parentNode = nodeToParent.get(node);
+    if (!parentNode) {
+      parentId = 0;
+    } else {
+      parentId = parentNode.id;
+    }
+    const {id, name} = node;
+    arr.push({id, name, parentId});
+  }
+
+  return arr;
+}
+
+
 
 // map + bfs
 function convert(root) {
@@ -100,3 +160,4 @@ function convert(root) {
   }
   return arr;
 }
+

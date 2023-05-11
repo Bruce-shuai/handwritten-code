@@ -3,3 +3,9 @@
   display: block; /* 这里要注意一下 */
   clear: both;
 }
+
+.clearfix::after {
+  content: "";
+  display: block;
+  clear: both;
+}

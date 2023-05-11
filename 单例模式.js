@@ -16,3 +16,14 @@ class SingleDog {
 let s1 = SingleDog.getInstance();
 let s2 = SingleDog.getInstance();
 console.log(s1 === s2);    // true;
+
+
+class SingleDog {
+  static Instance() {
+    if (SingleDog.instance) {
+      return SingleDog.instance;
+    } else {
+      SingleDog.instance = new SingleDog();
+    }
+  }
+}

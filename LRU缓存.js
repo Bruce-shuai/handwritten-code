@@ -26,7 +26,7 @@ class LRUCache {
     }
     data.set(key, value)   // 删了重建，处理顺序问题
     if (data.size > this.length) {
-      // 删除最老的元素    .keys().next().value 这个方法用得很好
+      // 删除最老的元素    .keys().next().value 这个方法用得很好，应该是迭代器的用法
       const delKey = data.keys().next().value
       data.delete(delKey);
     }
@@ -39,7 +39,7 @@ class LRUCache {
     const value = data.get(key)
     data.delete(key);
     data.set(key, value);
-
+    // 有返回值
     return value
   }
 }
@@ -68,5 +68,31 @@ class LRUCache {
     let value = this.data.get(key);
     this.data.delete(key);
     this.data.set(key, value)
+  }
+}
+
+
+
+class LRUCache {
+  constructor(length) {
+    this.length = length;
+    this.cache = new Map();
+  }
+
+  get(key) {
+    if (this.cache.has(key)) {
+      let temp = this.cache.get(key);
+      this.cache.delete(key);   
+      this.cache.set(key, temp)
+    }
+  }
+  set(key, value) {
+    if (this.cache.has(key)) {
+      this.cache.delete(key);   
+    }
+    this.cache.set(key, value);
+    if (length < this.cache.size) { // 注意：size 没有括号
+      this.cache.delete(this.cache.keys().next().value);
+    }
   }
 }

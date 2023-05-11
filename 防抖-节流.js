@@ -1,5 +1,5 @@
 // 节流
-// 在某段时间内，不管你触发了多少次回调，我都只认第一次，并在计时结束时给予响应
+// 在某段时间内，不管你触发了多少次回调，我都只认第一次，并在计时结束时给予响应。
 function throttle(fn, interval) {
   // 闭包的变量估计会覆盖原来的名字相同变量
   let last = 0;
@@ -16,7 +16,6 @@ function throttle(fn, interval) {
   }
 }
 
-
 // 防抖
 // 最后一次说了算
 // fnA 是要被触发的回调函数， delay 是延迟时间
@@ -27,7 +26,7 @@ let debounce = function(fn, delay) {
     // 锁定当前this的指向，方便控制fn的this指向
     let context = this;           // 额外加的点
     let args = arguments;
-    if (timer) {
+    if (timer) {                  // 顺序   --->   先clearTimeout
       clearTimeout(timer);
     }
     timer = setTimeout(function() {
@@ -37,3 +36,31 @@ let debounce = function(fn, delay) {
 }
 
 
+
+
+function debounce(fn, delay) {
+  let timer = null;
+  return function () {
+    let context = this;
+    if (timer) {
+      clearTimeout(timer);
+    }
+    timer = setTimeout(() => {
+      fn.apply(context, arguments);   // 都是指向的当前函数this  --> 包括curry 那个方法
+    }, delay)
+  }
+}
+
+
+function throttle(fn, interval) {
+  let lastTime = 0;
+
+  return function () {
+    let now = +new Date();
+    let context = this;
+    if (interval <= now - lastTime) {
+      fn.apply(context, arguments);
+      lastTime = now;
+    }
+  }
+}

@@ -10,3 +10,13 @@ function instanceOf(left, right) {
     proto = proto.__proto__   // Object.getPrototypeOf(proto) 也可以
   }
 }
+
+
+
+function instanceOf(left, right) {
+  while (left) {
+    if (left.__proto__ === right.prototype) return true;
+    if (left.__proto__ === null) return false;
+    proto = proto.__proto__ 
+  }
+}

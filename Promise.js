@@ -17,9 +17,9 @@ Promise._all = function(array) {
           result[i] = data;    // 1
           count++;             // 2
 
-          // 异步结束标志
-          if (count === array.length) {
-            resolve(results)
+          // 异步结束标志  --->  且是放在then里面的
+          if (count === array.length) {   // 这里是array.length
+            resolve(result)
           }
         }).catch(reject);
       } else {
@@ -82,7 +82,7 @@ Promise._all = function (array) {
 
 
 // Promise.race 
-Promise._race = function(array) {
+Promise._race = function(array) {    // 不需要count
   return new Promise((resolve, reject) => {
     for (let i = 0; i < array.length; i++) {
       const item = array[i];
@@ -95,10 +95,8 @@ Promise._race = function(array) {
   })
 }
 
-
 Promise._race2 = function(array) {
   return new Promise((resolve, reject) => {
-
     for (let i = 0; i < array.length; i++) {
       const item = array[i]
       if (Object.prototype.toString.call(item) === '[object Promise]') {
@@ -127,7 +125,7 @@ class MyPromise {
     // 异常情况就执行reject
     try {
       // this绑定是为了让resolve 和 reject 的this指向某个实例
-      func(this.resolve.bind(this), this.reject.bind(this));   
+      func(this.resolve.bind(this), this.reject.bind(this));     // this.resolve.bind(this)
     } catch (e) {
       this.reject(e)
     }
@@ -165,18 +163,78 @@ class MyPromise {
         this.resolveCallbacks.push(onFULFILLED)
         this.rejectCallbacks.push(onREJECTED)
       }
-      if (this.status === Promise.FULFILLED) {
+      if (this.status === MyPromise.FULFILLED) {
         // 设置异步执行
         setTimeout(() => {
           onFULFILLED(this.result)
         })
       } 
-      if (this.status === Promise.REJECTED) {
+      if (this.status === MyPromise.REJECTED) {
         setTimeout(() => {
           onREJECTED(this.result)
         })
       }
     })
+  }
+}
+
+
+class Promise {
+  static PENDING = '待定';
+  static FULFILLED = '成功';
+  static REJECTED = '失败';
+
+  constructor(func) {
+    this.result = null;    
+    this.status = Promise.PENDING;
+    this.onRejectedCallbacks = [];   
+    this.onResolvedCallbacks = [];
+    try {
+      func(this.resolve.bind(this), this.reject.bind(this));
+    } catch (e) {
+      this.reject(e);
+    }
+  }
+
+  resolve(data) {
+    setTimeout(() => {
+      if (this.status === Promise.PENDING) {
+        this.result = data;
+        this.status = Promise.FULFILLED;
+        this.onResolvedCallbacks.forEach(cb => cb(data))
+      }
+    })
+  }
+
+  reject(data) {
+    setTimeout(() => {
+      if (this.status === Promise.PENDING) {
+        this.result = data;
+        this.status = Promise.REJECTED;
+        this.onRejectedCallbacks.forEach(cb => cb(data))
+      }
+    })
+  }
+
+  then(onFULFILLED, onREJECTED) {
+    return new Promise((resolve, reject) => {
+      onFULFILLED = typeof onFULFILLED === 'function' ? onFULFILLED : () => {}
+      onREJECTED = typeof onREJECTED === 'function' ? onREJECTED : () => {}
+      if (this.status === Promise.PENDING) {
+        this.onRejectedCallbacks.push(onREJECTED);
+        this.onResolvedCallbacks.push(onFULFILLED);
+      }
+      if (this.status === Promise.FULFILLED) {
+        setTimeout(() => {
+          onFULFILLED(this.result)
+        })
+      }
+      if (this.status === Promise.REJECTED) {
+        setTimeout(() => {
+          onREJECTED(this.result)
+        })
+      }
+    })   
   }
 }
 
@@ -218,6 +276,7 @@ class MyPromise {
       }
     })
   }
+
   reject(result) {
     setTimeout(() => {  // 2
       if (this.status === MyPromise.PENDING) {
@@ -229,6 +288,7 @@ class MyPromise {
   }
 
   then(onFULFILLED, onREJECTED) {
+    // 这里用的箭头函数 
     return new Promise((resolve, reject) => {
       onFULFILLED = typeof onFULFILLED === 'function' ? onFULFILLED : () => {}
       onREJECTED = typeof onREJECTED === 'function' ? onREJECTED : () => {}

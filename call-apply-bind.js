@@ -98,3 +98,26 @@ Function.prototype.mybind = function(obj, ...args) {
     return that.apply(obj, [...args, ...arguments]);
   }
 }
+
+
+
+
+Function.prototype.bind = function(obj, ...args) {
+  let that = this;
+  return function func() {
+    if (this instanceof func) {
+      return new that(...args, ...arguments); 
+    }
+    return that.apply(obj, [...args, ...arguments]);
+  }
+}
+
+Function.prototype.call = function(obj, ...args) {
+  obj = obj || window;   
+  let symbol = Symbol();
+  obj[symbol] = this;   
+  let res = obj[symbol](...args);
+  delete obj[symbol];
+  return res;
+}
+

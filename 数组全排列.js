@@ -10,7 +10,7 @@ function test(nums) {
   // 递归，dfs
   function dfs(nth) {
     if (nth === len) {
-      res.push(cur.slice());
+      res.push(cur.slice());   // slice方法用得很好
       return;
     }
 
@@ -29,3 +29,5 @@ function test(nums) {
   dfs(0);
   return res;
 }
+
+

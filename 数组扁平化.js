@@ -25,3 +25,16 @@ function flat(array) {
   // 这种一般都会递归
   return flat(newArr)
 }
+
+
+
+function flat(arr) {
+  let isDeep = arr.some(item => item instanceof Array);     // 注意：是some方法
+  let newArr;
+  if (isDeep) {
+    newArr = Array.prototype.concat.apply([], arr);
+  } else {
+    return arr;
+  }
+  return flat(newArr);
+}

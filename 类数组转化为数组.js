@@ -5,3 +5,4 @@
 // let arr = Array.from(arguments)  // 注意与 Object.create 做比较
 
 // Array.prototype.concat.apply([],arguments)
+

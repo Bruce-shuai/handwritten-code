@@ -43,8 +43,8 @@
 
 function ajax(url, fn) {
   const xhr = new XMLHttpRequest();
-  xhr.open('GET', url, true);
-  xhr.onreadystatechange = function () {
+  xhr.open('GET', url, true); // true 为异步发起请求
+  xhr.onreadystatechange = function () {   // 这里是注入一个函数到onreadystatechange里面去
     if (xhr.readyState == 4) {
       if (xhr.status == 200) {
         fn(xhr.responseText);   // 这个responseText有点意思...
@@ -53,3 +53,4 @@ function ajax(url, fn) {
   }
   xhr.send();
 }
+

@@ -31,9 +31,9 @@ function switchLetterCase2(s) {
   let res = '';
   const length = s.length;
   if (length === 0) return res;
-  for (let i = 0; i < length; i++) {
-    const c = s[i];
-    const code = c.charCodeAt(0);  // 返回第一个字符的ascii码
+  for (let i = 0; i < length; i++) {  // 逐一遍历字符就行，判断ascii码
+    const c = s[i]; 
+    const code = c.charCodeAt(0);  // 返回第一个字符的ascii码  charCodeAt
     if (code >= 65 && code <= 90) {  // 大写
       res += c.toLowerCase();      // 变成小写
     } else if (code >= 97 && code <= 122) {
@@ -44,3 +44,4 @@ function switchLetterCase2(s) {
   }
   return res;
 }
+

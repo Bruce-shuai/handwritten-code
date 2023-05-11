@@ -50,6 +50,39 @@ class EventEmitter {
   }
 }
 
+
+
+
+
+class EventBus {
+  constructor() {
+    this.eventMap = {}; 
+  }
+
+  on(type, handler) {
+    if (!this.eventMap[type]) {
+      this.eventMap[type] = [];
+    }
+    this.eventMap[type].push(handler)
+  }
+  emit(type, params) {
+    if (this.eventMap[type]) {
+      this.eventMap[type].forEach(cb => cb(params));
+    }
+  }
+  off(type, handler) {
+    if (this.eventMap[type]) {
+      this.eventMap[type].splice(this.eventMap[type].indexOf(handler) >>> 0, 1);
+    }
+  }
+  once(type, handler) {
+    function fn(...args) {
+      handler(args)
+      this.off(type, fn)
+    }
+    this.on(type, fn) 
+  }    // once 也是 type 和  handler
+}
 const eventBus = new EventEmitter();
 const task1 = () => { console.log('task1') }
 const task2 = () => { console.log('task2') }

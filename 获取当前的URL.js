@@ -1,7 +1,7 @@
 // name 需是字符串， 该函数效果： 输入键名，返回键值
 function query(name) {
   const search = location.search;
-  const p = new URLSearchParams(search);   // 注意：这里是有new的
+  const p = new URLSearchParams(search);   // 注意：这里是有new的     Object.fromEntries(url)
   return p.get(name)
 }
 
@@ -17,13 +17,14 @@ function query() {
 // 方法二：split大法
 function getParams(url) {
   const res = {};
-  if (url.includes('?')) {  // include方法也很有意思
+  if (url.includes('?')) {  // include方法也很有意思  includes 方法
     const str = url.split('?')[1];
 
     const arr = str.split('&');
     arr.forEach(item => {
-      const key = item.split('=')[0];
-      const val = item.split('=')[1];
+      let newArr = item.split('=');
+      const key = newArr('=')[0];
+      const val = newArr('=')[1];
       res[key] = decodeURIComponent(val);      // 这里是一个亮点
     })
   }

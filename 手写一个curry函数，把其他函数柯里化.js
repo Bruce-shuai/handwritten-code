@@ -22,6 +22,21 @@ function curry(fn) {
   return calc; 
 }
 
+
+function curry(fn) {   // 传的是一个函数
+  let fnLen = fn.length;
+  let args = [];
+  function func(...newArgs) {
+    args = [...args, ...newArgs];
+    if (args.length < fnLen) {
+      return func
+    } else {
+      return fn.apply(this, args.slice(0, fnLen))
+    }
+  }
+  return func;
+}
+
 function add(a, b, c) {
   return a + b + c;
 }
@@ -30,3 +45,32 @@ add(10, 20, 30);
 const curryAdd = curry(add);  
 const res = curryAdd(10)(20)(30)   
 console.info(res);
+
+
+function curry(fn) {
+  let fnLen = fn.length;
+  let args = [];
+  function func(...newArgs) {
+    args = [...args, ...newArgs];
+    if (args.length < fnLen) {
+      return func;   // 这里是返回一个函数
+    } else {
+      return fn.apply(this, args.slice(0, fnLen))  // 这里需要着重注意： fn.apply(this, args.slice(0, fnLen)) // 执行最初传过来的函数
+    }
+  }
+  return func;
+}
+
+
+function curry(fn) {
+  let fnLen = fn.length;
+  let args = [];
+  return function func(...newArgs) {
+    args = [...args, ...newArgs];
+    if (args.length >= fnLen) {
+      return fn.apply(this, args.slice(0, fnLen))
+    } else {
+      return func;
+    }
+  }
+}

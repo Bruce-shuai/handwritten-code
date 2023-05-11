@@ -21,3 +21,30 @@ function diff(obj1, obj2) {
   }
   return true;
 }
+
+
+function diff(obj1, obj2) {
+  let o1 = obj1 instanceof Object;
+  let o2 = obj2 instanceof Object;
+
+  if (!o1 || !o2) {
+    return obj1 === obj2
+  }
+
+  if (Object.keys(o1) !== Object.keys(o2)) {
+    return false;
+  }
+  let flag = true;
+
+  for (let attr in obj1) {
+    let o1 = obj1[attr];
+    let o2 = obj2[attr];
+
+    if (o1 && o2) {
+      flag = diff(obj1[attr], obj2[attr])
+    } else {
+      return false; 
+    }
+  }
+  return flag;
+}

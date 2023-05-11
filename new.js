@@ -31,3 +31,23 @@ function create(Con, ...args) {
   let res = Con.apply(obj, args);   // 执行一次构造函数，看是否有返回值，且返回值是否是对象 (有待研究)
   return res instanceof Object ? res : obj;   // 这里是为了忽略构造函数返回原始值的情况...
 }
+
+// function func() {   
+// }
+// func.prototype = {
+//     name: 'apple',
+//     getName() {
+//         console.log(this.name)
+//     }
+// }
+// let apple = new func()
+// apple.getName() // apple
+apple.getName();
+apple.name // 回去寻找它的原型链上的name，然后把name赋值过来吗？ 此题可以去看看 现代JavaScript教程是怎么讲的
+
+function create(Con, ...args) {
+  let obj = Object.create(Con.prototype);
+  let res = Con.apply(obj, args);   
+
+  return res instanceof Object ? res : obj;
+}
